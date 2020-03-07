@@ -1,5 +1,6 @@
 import unionBy from 'lodash/unionBy';
 import castArray from 'lodash/castArray';
+import orderBy from 'lodash/orderBy';
 import * as Actions from '../actions';
 
 const initialState = {
@@ -7,7 +8,11 @@ const initialState = {
 };
 
 const loadUsers = (state, users) => {
-  const list = unionBy(castArray(users), state.data, 'id');
+  const list = orderBy(
+    unionBy(castArray(users), state.data, 'id'),
+    [(e) => `${e.first_name} ${e.last_name}`],
+    ['asc']
+  );
 
   return {
     ...state,
