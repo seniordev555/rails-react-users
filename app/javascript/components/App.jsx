@@ -1,5 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import PeopleOutlinedIcon from '@material-ui/icons/PeopleOutline';
 import * as Actions from '../store/actions';
+import UsersList from './Users';
 
 const drawerWidth = 240;
 
@@ -39,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const App = () => {
+const App = ({ history }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isLeftDrawerOpened = useSelector(({ ui }) => ui.isLeftDrawerOpened);
@@ -81,14 +88,21 @@ const App = () => {
         <div className={classes.toolbar} />
         <List>
           <ListItem button>
-            <ListItemText primary="Users" />
             <ListItemIcon>
               <PeopleOutlinedIcon />
             </ListItemIcon>
+            <ListItemText primary="Users" />
           </ListItem>
         </List>
       </Drawer>
-      <main className={classes.content}>Hello world</main>
+      <main className={classes.content}>
+        <Router history={history}>
+          <Switch>
+            <Route exact path="/users" component={UsersList} />
+            <Redirect to="/users" />
+          </Switch>
+        </Router>
+      </main>
     </div>
   );
 };
