@@ -1,11 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,6 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PeopleOutlinedIcon from '@material-ui/icons/PeopleOutline';
 import * as Actions from '../store/actions';
 import UsersList from './Users';
+import UserEditor from './Users/editor';
 
 const drawerWidth = 240;
 
@@ -59,6 +55,17 @@ const App = ({ history }) => {
     dispatch(Actions.toggleDrawer(false));
   };
 
+  const handleMenu = (attr) => () => {
+    switch (attr) {
+      case 'users':
+        history.push('/users');
+        break;
+      default:
+        break;
+    }
+    handleDrawerClose();
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -87,7 +94,7 @@ const App = ({ history }) => {
       >
         <div className={classes.toolbar} />
         <List>
-          <ListItem button>
+          <ListItem button onClick={handleMenu('users')}>
             <ListItemIcon>
               <PeopleOutlinedIcon />
             </ListItemIcon>
@@ -99,6 +106,7 @@ const App = ({ history }) => {
         <Router history={history}>
           <Switch>
             <Route exact path="/users" component={UsersList} />
+            <Route path="/users/:id?" component={UserEditor} />
             <Redirect to="/users" />
           </Switch>
         </Router>

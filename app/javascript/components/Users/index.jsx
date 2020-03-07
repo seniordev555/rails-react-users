@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,17 +10,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as Actions from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
   container: {},
   m2: {
     margin: theme.spacing(2),
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -47,10 +52,15 @@ const Users = ({ history }) => {
   }, []);
 
   const handleEdit = (user) => () => {
-    history.replace(`/users/${user.id}`);
+    history.push(`/users/${user.id}`);
   };
 
-  const handleDelete = (user) => () => {};
+  const handleDelete = (user) => async () => {
+    if (!confirm('Are you really going to delete this user?')) {
+      return;
+    }
+    await dispatch(Actions.deleteUser(user));
+  };
 
   if (!users) {
     return null;
@@ -58,7 +68,18 @@ const Users = ({ history }) => {
 
   return (
     <div>
-      <Typography variant="h5">Users</Typography>
+      <div className={classes.header}>
+        <Typography variant="h5">Users</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to="/users/new"
+        >
+          Add User
+        </Button>
+      </div>
+
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table" size="small">
           <TableHead>
@@ -94,10 +115,10 @@ const Users = ({ history }) => {
                   );
                 })}
                 <TableCell align="right">
-                  <IconButton onClick={handleEdit(row)}>
+                  <IconButton onClick={handleEdit(row)} color="primary">
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={handleDelete(row)}>
+                  <IconButton onClick={handleDelete(row)} color="secondary">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
