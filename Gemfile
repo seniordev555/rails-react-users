@@ -32,6 +32,9 @@ gem 'responders'
 
 gem 'foreman'
 
+# A library for generating fake data such as names, addresses, and phone numbers.
+gem 'faker'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
