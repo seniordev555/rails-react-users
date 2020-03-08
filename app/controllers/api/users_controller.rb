@@ -1,26 +1,28 @@
 class Api::UsersController < ApplicationController
-  respond_to :json
+  before_action :set_user, only: %i[show update destroy]
 
   def index
-    respond_with User.all
+    users = User.all
+    render json: users
   end
 
   def show
-    respond_with User.find(params[:id])
+    render json: @user
   end
 
   def create
-    respond_with :api, User.create(user_params)
+    @user = User.create(user_params)
+    render json: @user
   end
 
   def destroy
-    respond_with User.destroy(params[:id])
+    @user.destroy
+    head :no_content
   end
 
   def update
-    user = User.find(params['id'])
-    user.update(user_params)
-    respond_with User, json: user
+    @user.update_attributes(user_params)
+    render json: @user
   end
 
   private
@@ -33,5 +35,9 @@ class Api::UsersController < ApplicationController
       :last_name,
       :photo
     )
+  end
+
+  def set_user
+    @user = User.find(params[:id])
   end
 end

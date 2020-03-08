@@ -6,5 +6,7 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show create destroy update]
   end
 
-  get '*path', to: 'admin#index'
+  get '*path', to: 'admin#index', constraints: lambda { |req|
+    req.path.exclude? 'rails/active_storage'
+  }
 end

@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Photo from './Photo';
 import * as Actions from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +34,17 @@ const columns = [
     id: 'name',
     label: 'Name',
     minWidth: 170,
-    format: (_, row) => `${row.first_name} ${row.last_name}`,
+    format: (_, row) => {
+      const name = `${row.first_name} ${row.last_name}`;
+      const text = (row.first_name[0] || '') + (row.last_name[0] || '');
+
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Photo text={text} photo={row.photo} size={24} />
+          <span style={{ marginLeft: 8 }}>{name}</span>
+        </div>
+      );
+    },
   },
   {
     id: 'email',

@@ -9,6 +9,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import FormTextField from './FormTextField';
+import FormFileField from './FormFileField';
 import * as Actions from '../../store/actions';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,7 @@ const newUser = () => ({
   email: '',
   first_name: '',
   last_name: '',
+  photo: null,
 });
 
 const formSchema = Yup.object().shape({
@@ -84,10 +86,17 @@ const Editor = ({ history, match }) => {
   }, [form, users, setForm, userId]);
 
   const handleSave = async (data) => {
+    const formData = new FormData();
+    formData.append('user[first_name]', data.first_name);
+    formData.append('user[last_name]', data.last_name);
+    formData.append('user[email]', data.email);
+    if (data.photo) {
+      formData.append('user[photo]', data.photo);
+    }
     if (userId === 'new') {
-      await dispatch(Actions.createUser(data));
+      await dispatch(Actions.createUser(formData));
     } else {
-      await dispatch(Actions.updateUser({ id: form.id, ...data }));
+      await dispatch(Actions.updateUser(form.id, formData));
     }
 
     history.push('/users');
@@ -137,7 +146,7 @@ const Editor = ({ history, match }) => {
                 label="Last name"
                 component={FormTextField}
               />
-
+              <Field name="photo" label="Photo" component={FormFileField} />
               <Button
                 variant="contained"
                 color="primary"

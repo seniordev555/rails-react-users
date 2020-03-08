@@ -19,7 +19,11 @@ export const loadUsers = () => async (dispatch) => {
 
 export const createUser = (user) => async (dispatch) => {
   try {
-    const { data } = await axios.post('/api/users.json', user);
+    const { data } = await axios.post('/api/users.json', user, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     dispatch({ type: CREATE_USER_SUCCESS, payload: data });
     return data;
   } catch (err) {
@@ -39,9 +43,13 @@ export const getUser = (userId) => async (dispatch) => {
   return null;
 };
 
-export const updateUser = (user) => async (dispatch) => {
+export const updateUser = (userId, user) => async (dispatch) => {
   try {
-    const { data } = await axios.put(`/api/users/${user.id}.json`, user);
+    const { data } = await axios.put(`/api/users/${userId}.json`, user, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     dispatch({ type: UPDATE_USER_SUCCESS, payload: data });
     return data;
   } catch (err) {
